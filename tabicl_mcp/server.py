@@ -256,9 +256,12 @@ def serve_stdio():
     mcp.run(transport="stdio")
 
 
-def serve_http(host: str = "0.0.0.0", port: int = 8000):
+def serve_http(host: str = "0.0.0.0", port: int = None):
     """Run as an HTTP/SSE MCP server (for Claude.ai remote integrations, HF Spaces)."""
+    import os
     import uvicorn
+    if port is None:
+        port = int(os.environ.get("PORT", 7860))
     uvicorn.run(mcp.sse_app(), host=host, port=port)
 
 
