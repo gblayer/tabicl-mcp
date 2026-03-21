@@ -16,8 +16,6 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 from mcp.server.fastmcp import FastMCP
-from sklearn.metrics import r2_score, roc_auc_score
-from sklearn.preprocessing import LabelEncoder, OrdinalEncoder
 
 # --------------------------------------------------------------------------- #
 # Server declaration
@@ -53,6 +51,7 @@ def _encode_features(X_train: pd.DataFrame, X_test: pd.DataFrame):
     Unknown categories in test are mapped to the closest known value.
     Returns (X_train_np, X_test_np).
     """
+    from sklearn.preprocessing import OrdinalEncoder
     cat_cols = X_train.select_dtypes(include=["object", "bool", "category"]).columns.tolist()
     X_tr = X_train.copy()
     X_te = X_test.copy()
@@ -113,6 +112,8 @@ def predict(
           - features        : list of feature column names used
     """
     try:
+        from sklearn.metrics import r2_score, roc_auc_score
+        from sklearn.preprocessing import LabelEncoder, OrdinalEncoder
         from tabicl import TabICLClassifier, TabICLRegressor
     except ImportError:
         return _format_result({
