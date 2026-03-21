@@ -1,3 +1,12 @@
+---
+title: TabICL MCP
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # TabICL MCP Server
 
 > **State-of-the-art in-context tabular ML, available as a tool inside any MCP-compatible LLM.**
