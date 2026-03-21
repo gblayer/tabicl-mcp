@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tabicl-mcp"
+version = "0.1.0"
+description = "MCP server for TabICL — in-context tabular ML for LLM agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Gioia Blayer", email = "gioia.blayer@gmail.com" }]
+keywords = ["mcp", "tabicl", "tabular", "machine-learning", "llm", "agents"]
+
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "tabicl>=0.1.0",
+    "scikit-learn>=1.4.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+]
+
+[project.scripts]
+# stdio  →  for Claude Desktop, Cursor, VS Code
+tabicl-mcp       = "tabicl_mcp.server:serve_stdio"
+# HTTP   →  for Claude.ai remote integrations, HF Spaces
+tabicl-mcp-http  = "tabicl_mcp.server:serve_http"
+
+[project.urls]
+Homepage   = "https://github.com/gblayer/tabicl-mcp"
+Repository = "https://github.com/gblayer/tabicl-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tabicl_mcp"]

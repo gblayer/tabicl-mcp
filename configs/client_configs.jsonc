@@ -1,0 +1,65 @@
+# ============================================================
+# CONFIG FILES FOR CLIENTS
+# ============================================================
+
+# ----------------------------------------------------------
+# 1. CLAUDE DESKTOP  (local stdio)
+# File: ~/Library/Application Support/Claude/claude_desktop_config.json
+# ----------------------------------------------------------
+
+{
+  "mcpServers": {
+    "tabicl": {
+      "command": "tabicl-mcp",
+      "args": []
+    }
+  }
+}
+
+# If you installed in a venv, use the full path instead:
+# "command": "/path/to/venv/bin/tabicl-mcp"
+
+
+# ----------------------------------------------------------
+# 2. VS CODE  (Copilot / MCP extension)
+# File: .vscode/mcp.json  in your workspace
+# ----------------------------------------------------------
+
+{
+  "servers": {
+    "tabicl": {
+      "type": "stdio",
+      "command": "tabicl-mcp",
+      "args": []
+    }
+  }
+}
+
+
+# ----------------------------------------------------------
+# 3. CURSOR
+# Settings > MCP > Add server > paste this JSON
+# ----------------------------------------------------------
+
+{
+  "tabicl": {
+    "command": "tabicl-mcp",
+    "args": []
+  }
+}
+
+
+# ----------------------------------------------------------
+# 4. CLAUDE.AI  (remote HTTP/SSE)
+# Profile > Integrations > Add custom integration
+# Server URL: https://YOUR-USERNAME-tabicl-mcp.hf.space/sse
+# ----------------------------------------------------------
+# (No config file — entered in the Claude.ai UI)
+
+
+# ----------------------------------------------------------
+# 5. CHATGPT  (via OpenAI custom actions)
+# The server exposes a /openapi.json route automatically.
+# In ChatGPT > Explore GPTs > Create > Actions:
+#   Schema URL: https://YOUR-SERVER/openapi.json
+# ----------------------------------------------------------
