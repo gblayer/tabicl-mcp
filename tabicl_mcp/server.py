@@ -258,7 +258,8 @@ def serve_stdio():
 
 def serve_http(host: str = "0.0.0.0", port: int = 8000):
     """Run as an HTTP/SSE MCP server (for Claude.ai remote integrations, HF Spaces)."""
-    mcp.run(transport="sse", host=host, port=port)
+    import uvicorn
+    uvicorn.run(mcp.sse_app(), host=host, port=port)
 
 
 if __name__ == "__main__":
