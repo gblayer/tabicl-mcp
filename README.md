@@ -1,4 +1,4 @@
-# TabICL MCP Server
+# TabICL MCP Server (** NOT FINISHED)
 
 > **State-of-the-art in-context tabular ML, available as a tool inside any MCP-compatible LLM.**
 
