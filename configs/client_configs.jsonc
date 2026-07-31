@@ -1,65 +1,54 @@
-# ============================================================
-# CONFIG FILES FOR CLIENTS
-# ============================================================
+// ============================================================
+// CLIENT CONFIGS — TabICL MCP
+// Local (stdio): uvx tabicl-mcp   |   Remote: https://YOUR-SPACE.hf.space/mcp
+// ============================================================
 
-# ----------------------------------------------------------
-# 1. CLAUDE DESKTOP  (local stdio)
-# File: ~/Library/Application Support/Claude/claude_desktop_config.json
-# ----------------------------------------------------------
-
+// ----------------------------------------------------------
+// 1. CLAUDE DESKTOP (local stdio)
+// File: ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+//       %APPDATA%\Claude\claude_desktop_config.json (Windows)
+// ----------------------------------------------------------
 {
   "mcpServers": {
-    "tabicl": {
-      "command": "tabicl-mcp",
-      "args": []
-    }
+    "tabicl": { "command": "uvx", "args": ["tabicl-mcp"] }
   }
 }
+// pip alternative: { "command": "tabicl-mcp" }  (or full venv path)
 
-# If you installed in a venv, use the full path instead:
-# "command": "/path/to/venv/bin/tabicl-mcp"
+// ----------------------------------------------------------
+// 2. CLAUDE CODE (CLI)
+//   claude mcp add tabicl -- uvx tabicl-mcp
+// ----------------------------------------------------------
 
-
-# ----------------------------------------------------------
-# 2. VS CODE  (Copilot / MCP extension)
-# File: .vscode/mcp.json  in your workspace
-# ----------------------------------------------------------
-
+// ----------------------------------------------------------
+// 3. VS CODE / CURSOR (local stdio)
+// File: .vscode/mcp.json in your workspace (or Cursor Settings > MCP)
+// ----------------------------------------------------------
 {
   "servers": {
-    "tabicl": {
-      "type": "stdio",
-      "command": "tabicl-mcp",
-      "args": []
-    }
+    "tabicl": { "type": "stdio", "command": "uvx", "args": ["tabicl-mcp"] }
   }
 }
 
+// ----------------------------------------------------------
+// 4. CLAUDE.AI (remote, Streamable HTTP)
+// Settings > Connectors > Add custom connector
+// URL: https://YOUR-SPACE.hf.space/mcp
+// ----------------------------------------------------------
 
-# ----------------------------------------------------------
-# 3. CURSOR
-# Settings > MCP > Add server > paste this JSON
-# ----------------------------------------------------------
+// ----------------------------------------------------------
+// 5. CHATGPT (remote, Streamable HTTP)
+// Requires a paid plan. Settings > enable Developer Mode,
+// then Apps & Connectors > Add custom connector
+// URL: https://YOUR-SPACE.hf.space/mcp
+// ----------------------------------------------------------
 
+// ----------------------------------------------------------
+// 6. GEMINI CLI (remote or local)
+// File: ~/.gemini/settings.json
+// ----------------------------------------------------------
 {
-  "tabicl": {
-    "command": "tabicl-mcp",
-    "args": []
+  "mcpServers": {
+    "tabicl": { "httpUrl": "https://YOUR-SPACE.hf.space/mcp" }
   }
 }
-
-
-# ----------------------------------------------------------
-# 4. CLAUDE.AI  (remote HTTP/SSE)
-# Profile > Integrations > Add custom integration
-# Server URL: https://YOUR-USERNAME-tabicl-mcp.hf.space/sse
-# ----------------------------------------------------------
-# (No config file — entered in the Claude.ai UI)
-
-
-# ----------------------------------------------------------
-# 5. CHATGPT  (via OpenAI custom actions)
-# The server exposes a /openapi.json route automatically.
-# In ChatGPT > Explore GPTs > Create > Actions:
-#   Schema URL: https://YOUR-SERVER/openapi.json
-# ----------------------------------------------------------
