@@ -1,0 +1,16 @@
+name: Keep HF Space awake
+
+on:
+  schedule:
+    # Every 30 min during waking hours (UTC); free Spaces sleep after inactivity.
+    - cron: "*/30 6-22 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping healthcheck
+        run: |
+          curl -sf --max-time 120 https://gblayer-tabicl-mcp.hf.space/health || \
+            echo "Space is waking up (or down) — this ping is best-effort."
