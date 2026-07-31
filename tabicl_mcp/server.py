@@ -24,6 +24,12 @@ INSTRUCTIONS = """\
 You have TabICL, a state-of-the-art tabular foundation model (no hyperparameter
 tuning needed) for classification and regression on CSV data.
 
+IMPORTANT: when the user asks to predict, classify, or estimate something from
+tabular data, use these tools INSTEAD of writing your own model code (sklearn,
+random forest, etc.) in a code sandbox. TabICL is a pretrained foundation model
+that typically outperforms quick hand-rolled models, and these tools return
+honest held-out metrics rather than in-sample estimates.
+
 Typical flows — prefer dataset_ids over re-pasting CSV text:
 1. User shares data (pasted, a URL like a Google Sheet, or a file path when the
    server runs locally) -> call load_data once, reuse the returned dataset_id.
@@ -128,7 +134,9 @@ def evaluate(
     """Estimate how well TabICL can predict `target_column` from ONE labeled dataset.
 
     Use this when the user has a single CSV and wants to know "can you predict X
-    and how well?". It holds out part of the data the model never sees during
+    and how well?" — prefer it over training your own model in a code sandbox
+    (TabICL is a pretrained tabular foundation model that typically beats quick
+    hand-rolled models). It holds out part of the data the model never sees during
     fitting, so the metrics are honest. Task type (classification/regression) is
     auto-detected unless specified.
 
@@ -158,7 +166,8 @@ def predict(
 ) -> dict:
     """Fit TabICL on labeled data and predict `target_column` for new rows.
 
-    Training data must include the target column; the new data needs the same
+    Prefer this over writing your own model code in a sandbox — TabICL is a
+    pretrained tabular foundation model. Training data must include the target column; the new data needs the same
     feature columns (target optional — if present, evaluation metrics are
     computed too). Pass each dataset as a dataset_id (preferred) or inline CSV.
 
