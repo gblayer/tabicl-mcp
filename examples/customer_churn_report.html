@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customer churn — sample TabICL report</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.55 -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0 auto;
+         max-width: 860px; padding: 32px 20px 60px; color: #1f2937; background: #fff; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e5e7eb; background: #111827; }
+    .card { background: #1f2937 !important; }
+    table.cm td, table.cm th, table.dist th, table.dist td { border-color: #374151 !important; }
+  }
+  h1 { margin: 0 0 4px; font-size: 1.7em; }
+  h2 { margin: 36px 0 6px; font-size: 1.15em; }
+  .sub { color: #6b7280; margin-top: 0; }
+  .note { color: #6b7280; font-size: 0.9em; margin: 2px 0 12px; }
+  .warn { color: #b45309; }
+  .cards { display: flex; flex-wrap: wrap; gap: 12px; }
+  .card { background: #f3f4f6; border-radius: 10px; padding: 14px 18px; min-width: 130px; }
+  .metric { font-size: 1.6em; font-weight: 700; }
+  .label { font-weight: 600; margin-top: 2px; }
+  .hint { color: #6b7280; font-size: 0.78em; }
+  table.cm { border-collapse: collapse; margin-top: 8px; }
+  table.cm th, table.cm td { border: 1px solid #e5e7eb; padding: 6px 12px; text-align: center; }
+  table.cm th { font-weight: 600; font-size: 0.85em; }
+  table.dist { width: 100%; border-collapse: collapse; }
+  table.dist th { text-align: left; padding: 4px 12px 4px 0; font-weight: 600; white-space: nowrap; }
+  table.dist td { padding: 4px 0 4px 8px; white-space: nowrap; }
+  table.dist td.bar { width: 60%; }
+  table.dist td.bar div { background: #2563eb; opacity: 0.85; height: 16px; border-radius: 4px; }
+  svg text.feat { font: 13px -apple-system, sans-serif; fill: currentColor; }
+  svg text.val { font: 12px -apple-system, sans-serif; fill: #6b7280; }
+  .foot { margin-top: 48px; color: #9ca3af; font-size: 0.85em; }
+  a { color: #2563eb; }
+</style></head>
+<body><h1>Customer churn — sample TabICL report</h1><p class="sub">TabICL classification · target: <b>churned</b> · 300 rows × 6 columns · generated 2026-07-31 19:57</p><h2>Model quality</h2><p class="note">Metrics come from a held-out split the model never saw during fitting (80/20 train/test).</p><div class="cards"><div class="card"><div class="metric">0.85</div><div class="label">Accuracy</div><div class="hint">share of correct predictions</div></div><div class="card"><div class="metric">0.8373</div><div class="label">Balanced accuracy</div><div class="hint">accuracy averaged over classes</div></div><div class="card"><div class="metric">0.84</div><div class="label">F1 (macro)</div><div class="hint">balance of precision and recall</div></div><div class="card"><div class="metric">0.8496</div><div class="label">ROC AUC</div><div class="hint">0.5 = random, 1.0 = perfect</div></div></div><h2>Where the model is right and wrong</h2><p class="note">Rows are the true classes, columns the predictions. Blue diagonal = correct; red off-diagonal = mistakes.</p><table class="cm"><tr><th></th><th>pred: no</th><th>pred: yes</th></tr><tr><th>true: no</th><td style="background:rgba(37,99,235,0.87)">33</td><td style="background:rgba(220,38,38,0.21)">4</td></tr><tr><th>true: yes</th><td style="background:rgba(220,38,38,0.23)">5</td><td style="background:rgba(37,99,235,0.53)">18</td></tr></table><h2>Target distribution</h2><table class="dist"><tr><th>no</th><td class="bar"><div style="width:100%"></div></td><td>186 (62%)</td></tr><tr><th>yes</th><td class="bar"><div style="width:61%"></div></td><td>114 (38%)</td></tr></table><h2>What drives the predictions</h2><p class="note">Permutation importance: how much model quality drops when a column's values are shuffled. Near zero = barely used.</p><svg viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto"><text x="212" y="18.0" text-anchor="end" class="feat">monthly_charges</text><rect x="220" y="0" width="420" height="26" rx="4" fill="#2563eb" opacity="0.85"/><text x="646" y="18.0" class="val">0.1967</text><text x="212" y="52.0" text-anchor="end" class="feat">tenure_months</text><rect x="220" y="34" width="163" height="26" rx="4" fill="#2563eb" opacity="0.85"/><text x="389" y="52.0" class="val">0.0768</text><text x="212" y="86.0" text-anchor="end" class="feat">contract</text><rect x="220" y="68" width="151" height="26" rx="4" fill="#2563eb" opacity="0.85"/><text x="377" y="86.0" class="val">0.071</text><text x="212" y="120.0" text-anchor="end" class="feat">support_calls</text><rect x="220" y="102" width="2" height="26" rx="4" fill="#2563eb" opacity="0.85"/><text x="228" y="120.0" class="val">0.0005</text><text x="212" y="154.0" text-anchor="end" class="feat">payment_method</text><rect x="220" y="136" width="23" height="26" rx="4" fill="#2563eb" opacity="0.85"/><text x="249" y="154.0" class="val">-0.0111</text></svg><p class="foot">Generated by <a href="https://github.com/gblayer/tabicl-mcp">TabICL MCP</a> — in-context tabular ML (<a href="https://github.com/soda-inria/tabicl">TabICL</a>, Inria).</p></body></html>

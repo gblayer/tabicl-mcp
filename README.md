@@ -37,10 +37,20 @@ Claude: [load_data]  → 2,340 rows, 12 columns, target "churned" looks binary
 
 ## Try it in 60 seconds
 
-Once connected (see below), paste this into your assistant:
+**Connect the public server to claude.ai** (Pro/Max/Team plans):
+
+1. Go to **Settings → Connectors → Add custom connector**
+2. Name: `tabicl` · URL: **`https://gblayer-tabicl-mcp.hf.space/mcp`**
+3. Leave the OAuth fields empty and click **Add** — that's it.
+
+<!-- screenshot: docs/images/add-connector.png -->
+
+Then paste this into a new chat:
 
 > Load this CSV and tell me: can you predict the `churned` column? How accurate is it, what drives churn the most, and can you make me a report?
 > https://raw.githubusercontent.com/gblayer/tabicl-mcp/main/examples/customer_churn.csv
+
+You'll get honest held-out metrics, the churn drivers ranked, and a shareable report — [see a sample of what the report looks like](https://html-preview.github.io/?url=https://raw.githubusercontent.com/gblayer/tabicl-mcp/main/examples/customer_churn_report.html) ([source](examples/customer_churn_report.html)).
 
 ## Use it
 
