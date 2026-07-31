@@ -33,7 +33,7 @@ Claude: [load_data]  → 2,340 rows, 12 columns, target "churned" looks binary
 2. Name: `tabicl` · URL: **`https://gblayer-tabicl-mcp.hf.space/mcp`**
 3. Leave the OAuth fields empty and click **Add** — that's it.
 
-<img src="docs/images/add-connector.png" alt="Add custom connector dialog in claude.ai" width="480">
+<img src="https://raw.githubusercontent.com/gblayer/tabicl-mcp/main/docs/images/add-connector.png" alt="Add custom connector dialog in claude.ai" width="480">
 
 Then paste this into a new chat:
 
