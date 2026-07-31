@@ -6,7 +6,7 @@ load data (paste / URL / file), evaluate, predict, explain, and generate a
 shareable HTML report.
 
 Transports: stdio (Claude Desktop, Cursor, VS Code) and Streamable HTTP
-(claude.ai, ChatGPT, Gemini — one URL, e.g. hosted on a free HuggingFace Space).
+(claude.ai, ChatGPT — one URL, e.g. hosted on a free HuggingFace Space).
 """
 
 from __future__ import annotations
@@ -27,6 +27,9 @@ tuning needed) for classification and regression on CSV data.
 Typical flows — prefer dataset_ids over re-pasting CSV text:
 1. User shares data (pasted, a URL like a Google Sheet, or a file path when the
    server runs locally) -> call load_data once, reuse the returned dataset_id.
+   If the user UPLOADED a file to the chat, do not pass its sandbox path as
+   file_path (this server cannot see it) — read the file in your environment
+   and pass its text as csv_content instead.
 2. "Can you predict X from this?" / "how accurate would it be?" -> evaluate
    (single labeled dataset; it does an honest train/test split internally).
 3. "Predict for these new rows" -> predict (labeled data + new rows).
@@ -86,10 +89,14 @@ def load_data(
     """Load a dataset once and get a dataset_id to reuse in every other tool.
 
     Provide exactly ONE source:
-      csv_content — raw CSV text pasted by the user (best under ~10k rows)
+      csv_content — raw CSV text. For files uploaded to the chat, read the file
+                    in your own environment and pass its text here (best under
+                    ~10k rows)
       url         — link to a CSV: Google Sheets share link (must be viewable by
                     anyone with the link), raw GitHub file, or any direct CSV URL
-      file_path   — path on the server's machine (only when running locally)
+      file_path   — path on the machine where THIS SERVER runs. Only valid when
+                    the user runs the server locally; never pass chat-sandbox
+                    paths like /mnt/data/... — the server cannot see them
 
     Optionally pass target_column to get a suggested task type and target stats.
 
@@ -345,7 +352,7 @@ def serve_stdio() -> None:
 
 
 def serve_http() -> None:
-    """Remote server (Streamable HTTP) for claude.ai, ChatGPT, Gemini, HF Spaces."""
+    """Remote server (Streamable HTTP) for claude.ai, ChatGPT, HF Spaces."""
     global _TRANSPORT
     _TRANSPORT = "http"
     _cleanup_reports()

@@ -43,12 +43,3 @@
 // URL: https://YOUR-SPACE.hf.space/mcp
 // ----------------------------------------------------------
 
-// ----------------------------------------------------------
-// 6. GEMINI CLI (remote or local)
-// File: ~/.gemini/settings.json
-// ----------------------------------------------------------
-{
-  "mcpServers": {
-    "tabicl": { "httpUrl": "https://YOUR-SPACE.hf.space/mcp" }
-  }
-}

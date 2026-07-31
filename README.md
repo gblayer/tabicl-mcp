@@ -1,6 +1,6 @@
 # TabICL MCP Server
 
-> **State-of-the-art tabular ML inside Claude, ChatGPT, or Gemini — upload a CSV, ask a question, get predictions, explanations, and a report. Free and self-hostable.**
+> **State-of-the-art tabular ML inside Claude or ChatGPT — share a CSV, ask a question, get predictions, explanations, and a report. Free and self-hostable.**
 
 [TabICL](https://github.com/soda-inria/tabicl) (Inria, ICML 2025/2026) is a tabular foundation model: it classifies and regresses on tabular data **without any hyperparameter tuning**, via in-context learning. This MCP server makes it usable from natural language in any MCP-compatible assistant or agent.
 
@@ -74,9 +74,17 @@ Requires Python ≥ 3.10. With [uv](https://docs.astral.sh/uv/): nothing to inst
 
 With a local server, `load_data` accepts file paths — no pasting needed, and no data ever leaves your machine.
 
-### Option B — Remote URL (free, for claude.ai / ChatGPT / Gemini)
+### Option B — Deploy your own private server (free, for claude.ai / ChatGPT)
 
-Deploy your own free endpoint on HuggingFace Spaces:
+**Who this is for:** when you use the public URL above, your CSV data is processed on a
+server operated by this project. That's fine for demos and non-sensitive data — but if
+you're working with confidential data (customer lists, medical records, company
+financials), deploy your own copy instead: identical functionality, but **your data only
+ever touches infrastructure you control**. A second reason: the public Space is a single
+shared free instance — if it's busy or asleep you wait, while your own deployment serves
+only you.
+
+Deploying your own free endpoint on HuggingFace Spaces:
 
 1. Create a Space → **Docker** SDK → CPU basic (free).
 2. HF Spaces reads its deployment settings from a YAML header at the very top of
@@ -102,7 +110,6 @@ Then connect:
 
 - **claude.ai** — Settings → Connectors → *Add custom connector* → paste the URL.
 - **ChatGPT** — enable Developer Mode (Settings, paid plans) → Apps & Connectors → add the URL.
-- **Gemini CLI / API** — add the URL as a remote MCP server in your config.
 
 > Free Spaces sleep after inactivity — the first request after idle takes a minute or two while the Space wakes. Everything after that is fast.
 

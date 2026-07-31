@@ -48,6 +48,13 @@ def test_normalize_plain_url_untouched():
     assert D.normalize_url("https://example.com/x.csv") == "https://example.com/x.csv"
 
 
+def test_load_from_path_chat_upload_guidance():
+    # A path that only exists in an assistant's sandbox must produce an error
+    # that teaches the model to retry with csv_content or url.
+    with pytest.raises(D.DataError, match="csv_content"):
+        D.load_from_path("/mnt/data/customer_churn.csv")
+
+
 def test_cache_roundtrip_and_miss():
     df = pd.DataFrame({"a": [1, 2], "b": [3, 4]})
     ds_id = D.CACHE.put(df, name="t")

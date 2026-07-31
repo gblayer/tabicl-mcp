@@ -151,7 +151,15 @@ def load_from_path(path: str) -> pd.DataFrame:
         with open(path, "r", encoding="utf-8-sig") as fh:
             text = fh.read(MAX_FETCH_BYTES + 1)
     except OSError as exc:
-        raise DataError(f"Could not read file '{path}': {exc}") from exc
+        # The most common mistake: passing a chat-upload path (e.g. ChatGPT's
+        # /mnt/data/...) that only exists in the assistant's sandbox, not here.
+        raise DataError(
+            f"Could not read file '{path}' — this MCP server runs on its own machine "
+            "and cannot see files uploaded to the chat. Instead: read the uploaded "
+            "file in your environment and pass its text via csv_content, or provide "
+            "a public URL via url. file_path only works when the user runs this "
+            "server locally on their own computer."
+        ) from exc
     if len(text) > MAX_FETCH_BYTES:
         raise DataError(f"File is larger than the {MAX_FETCH_BYTES // 1024 // 1024} MB limit.")
     return parse_csv(text, max_rows=MAX_ROWS)
