@@ -1,13 +1,3 @@
----
-title: TabICL MCP
-emoji: 🤖
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # TabICL MCP Server
 
 > **State-of-the-art tabular ML inside Claude, ChatGPT, or Gemini — upload a CSV, ask a question, get predictions, explanations, and a report. Free and self-hostable.**
@@ -43,7 +33,7 @@ Claude: [load_data]  → 2,340 rows, 12 columns, target "churned" looks binary
 2. Name: `tabicl` · URL: **`https://gblayer-tabicl-mcp.hf.space/mcp`**
 3. Leave the OAuth fields empty and click **Add** — that's it.
 
-<!-- screenshot: docs/images/add-connector.png -->
+<img src="docs/images/add-connector.png" alt="Add custom connector dialog in claude.ai" width="480">
 
 Then paste this into a new chat:
 
@@ -89,8 +79,24 @@ With a local server, `load_data` accepts file paths — no pasting needed, and n
 Deploy your own free endpoint on HuggingFace Spaces:
 
 1. Create a Space → **Docker** SDK → CPU basic (free).
-2. Push this repo to it (the `Dockerfile` pre-downloads model checkpoints at build).
-3. Your MCP endpoint: `https://YOUR-SPACE.hf.space/mcp`
+2. HF Spaces reads its deployment settings from a YAML header at the very top of
+   the Space's `README.md` — add this before pushing (only needed for the copy
+   that lives on HuggingFace, not for using the server):
+
+   ```yaml
+   ---
+   title: TabICL MCP
+   emoji: 🤖
+   colorFrom: blue
+   colorTo: green
+   sdk: docker
+   app_port: 7860
+   pinned: false
+   ---
+   ```
+
+3. Push this repo to the Space (the `Dockerfile` pre-downloads model checkpoints at build).
+4. Your MCP endpoint: `https://YOUR-SPACE.hf.space/mcp`
 
 Then connect:
 
