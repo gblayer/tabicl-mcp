@@ -111,6 +111,11 @@ Then connect:
 - **claude.ai** — Settings → Connectors → *Add custom connector* → paste the URL.
 - **ChatGPT** — enable Developer Mode (Settings, paid plans) → Apps & Connectors → add the URL.
 
+> **ChatGPT + file uploads:** ChatGPT often can't hand chat-uploaded files to connectors
+> (it only shows the model a preview). Workaround: open the server's homepage
+> (`https://YOUR-SPACE.hf.space/`), upload your CSV there, and paste the returned
+> dataset id into the chat. Claude reads chat uploads directly — no workaround needed.
+
 > Free Spaces sleep after inactivity — the first request after idle takes a minute or two while the Space wakes. Everything after that is fast.
 
 ### Option C — Docker anywhere

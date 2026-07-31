@@ -56,6 +56,22 @@ def test_full_flow_and_report(tmp_path, monkeypatch):
     assert "<svg" in html and "Accuracy" in html
 
 
+def test_upload_page_roundtrip():
+    from starlette.testclient import TestClient
+
+    app = server.mcp.streamable_http_app()
+    with TestClient(app) as client:
+        assert "Upload a CSV" in client.get("/").text
+        resp = client.post("/upload", files={"file": ("t.csv", b"a,b\n1,2\n3,4\n", "text/csv")})
+        assert "ds_" in resp.text
+        assert "✔ Uploaded" in resp.text and "2 rows × 2 columns" in resp.text
+        ds_id = resp.text.split("<code>")[1].split("</code>")[0]
+        assert server.D.CACHE.get(ds_id).df.shape == (2, 2)
+
+        bad = client.post("/upload", files={"file": ("t.csv", b"", "text/csv")})
+        assert "✘" in bad.text
+
+
 def test_build_report_smoke_without_model():
     evaluation = {
         "task_type": "classification",

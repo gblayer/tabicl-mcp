@@ -35,7 +35,9 @@ Typical flows — prefer dataset_ids over re-pasting CSV text:
    server runs locally) -> call load_data once, reuse the returned dataset_id.
    If the user UPLOADED a file to the chat, do not pass its sandbox path as
    file_path (this server cannot see it) — read the file in your environment
-   and pass its text as csv_content instead.
+   and pass its text as csv_content instead. If you cannot read the full file,
+   ask the user to upload it at the server's homepage, which gives them a
+   dataset_id (like ds_1a2b3c4d) you can pass directly to any tool.
 2. "Can you predict X from this?" / "how accurate would it be?" -> evaluate
    (single labeled dataset; it does an honest train/test split internally).
 3. "Predict for these new rows" -> predict (labeled data + new rows).
@@ -327,12 +329,99 @@ async def serve_report(request):
     return FileResponse(path, media_type="text/html")
 
 
-@mcp.custom_route("/", methods=["GET"])
 @mcp.custom_route("/health", methods=["GET"])
 async def health(request):
     from starlette.responses import JSONResponse
 
     return JSONResponse({"status": "ok", "server": "tabicl-mcp", "mcp_endpoint": "/mcp"})
+
+
+_UPLOAD_PAGE = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TabICL MCP</title>
+<style>
+  :root {{ color-scheme: light dark; }}
+  body {{ font: 16px/1.6 -apple-system, "Segoe UI", Roboto, sans-serif; max-width: 640px;
+         margin: 0 auto; padding: 48px 20px; color: #1f2937; background: #fff; }}
+  @media (prefers-color-scheme: dark) {{ body {{ color: #e5e7eb; background: #111827; }} }}
+  h1 {{ font-size: 1.5em; margin-bottom: 4px; }}
+  .sub {{ color: #6b7280; margin-top: 0; }}
+  .box {{ border: 1px solid #d1d5db; border-radius: 12px; padding: 20px; margin: 24px 0; }}
+  code {{ background: rgba(127,127,127,.15); padding: 2px 6px; border-radius: 5px; }}
+  button {{ background: #2563eb; color: #fff; border: 0; border-radius: 8px;
+           padding: 10px 18px; font-size: 1em; cursor: pointer; }}
+  .ok {{ color: #059669; }} .err {{ color: #dc2626; }}
+  a {{ color: #2563eb; }}
+</style></head>
+<body>
+<h1>🤖 TabICL MCP</h1>
+<p class="sub">Tabular ML for AI assistants — predictions, explanations, reports.</p>
+
+<div class="box">
+  <b>Connect your assistant</b>
+  <p>MCP endpoint: <code>{base}/mcp</code><br>
+  claude.ai: Settings → Connectors → Add custom connector.<br>
+  ChatGPT: Developer Mode → Apps &amp; Connectors.
+  <a href="https://github.com/gblayer/tabicl-mcp">Full instructions</a>.</p>
+</div>
+
+<div class="box">
+  <b>Upload a CSV for your chat session</b>
+  <p>Chat apps often can't hand uploaded files to connectors. Upload here instead,
+  then paste the dataset id into your chat (valid ~4 hours).</p>
+  <form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".csv,text/csv" required>
+    <button type="submit">Upload</button>
+  </form>
+  {result}
+</div>
+
+<p class="sub">Powered by <a href="https://github.com/soda-inria/tabicl">TabICL</a> (Inria).
+Data stays in memory and expires; no accounts, no tracking.</p>
+</body></html>"""
+
+
+def _upload_page(result: str = "") -> str:
+    base = _PUBLIC_URL.rstrip("/") if _PUBLIC_URL else ""
+    return _UPLOAD_PAGE.format(base=base or "https://YOUR-SERVER", result=result)
+
+
+@mcp.custom_route("/", methods=["GET"])
+async def home(request):
+    from starlette.responses import HTMLResponse
+
+    return HTMLResponse(_upload_page())
+
+
+@mcp.custom_route("/upload", methods=["POST"])
+async def upload(request):
+    from starlette.responses import HTMLResponse
+
+    try:
+        form = await request.form()
+        file = form.get("file")
+        if file is None:
+            raise DataError("No file received.")
+        raw = await file.read()
+        if len(raw) > D.MAX_FETCH_BYTES:
+            raise DataError(
+                f"File is larger than the {D.MAX_FETCH_BYTES // 1024 // 1024} MB limit."
+            )
+        df = D.parse_csv(raw.decode("utf-8-sig", errors="replace"), max_rows=D.MAX_ROWS)
+        dataset_id = D.CACHE.put(df, name=getattr(file, "filename", "") or "upload")
+        result = (
+            f'<p class="ok">✔ Uploaded: {len(df):,} rows × {len(df.columns)} columns.</p>'
+            f"<p>Your dataset id: <code>{dataset_id}</code></p>"
+            f"<p>Now paste this into your AI chat:<br>"
+            f"<code>Using tabicl-mcp, analyze my dataset {dataset_id} — "
+            f"predict &lt;your target column&gt;.</code></p>"
+        )
+    except DataError as exc:
+        result = f'<p class="err">✘ {exc}</p>'
+    except Exception as exc:
+        result = f'<p class="err">✘ Upload failed: {type(exc).__name__}</p>'
+    return HTMLResponse(_upload_page(result))
 
 
 def _cleanup_reports(max_age_hours: float = 24) -> None:
