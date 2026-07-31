@@ -35,6 +35,13 @@ Claude: [load_data]  → 2,340 rows, 12 columns, target "churned" looks binary
 
 **Data limits:** ~10k rows pasted inline, ~50k via URL or file. TabICLv2 handles 2–100 features natively.
 
+## Try it in 60 seconds
+
+Once connected (see below), paste this into your assistant:
+
+> Load this CSV and tell me: can you predict the `churned` column? How accurate is it, what drives churn the most, and can you make me a report?
+> https://raw.githubusercontent.com/gblayer/tabicl-mcp/main/examples/customer_churn.csv
+
 ## Use it
 
 ### Option A — Local (free, private, fastest)
