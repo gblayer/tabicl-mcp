@@ -91,16 +91,6 @@ docker run -p 7860:7860 tabicl-mcp
 # MCP endpoint: http://localhost:7860/mcp   ·   healthcheck: /health
 ```
 
-## Why TabICL (vs TabPFN)
-
-| | TabICL MCP (this) | TabPFN MCP (Prior Labs) |
-|---|---|---|
-| Weights | Open (Inria, academic) | Hosted API |
-| Cost | Free — run it yourself | API account, hosted |
-| Privacy | Local mode: data never leaves your machine | Data goes to their API |
-| Speed | TabICLv2: ~10× faster than TabPFN-2.5 at parity accuracy (per the [TabICL paper](https://arxiv.org/abs/2602.11139)) | GPU-hosted |
-| Scope | Classification + regression | + time series, causal |
-
 ## Development
 
 ```bash
