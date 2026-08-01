@@ -1,6 +1,6 @@
 # TabICL MCP Server
 
-> **State-of-the-art tabular ML inside Claude or ChatGPT — share a CSV, ask a question, get predictions, explanations, and a report. Free and self-hostable.**
+> **State-of-the-art tabular ML inside Claude — upload a CSV, ask a question, get predictions, explanations, and a report. Free and self-hostable.**
 
 [TabICL](https://github.com/soda-inria/tabicl) (Inria, ICML 2025/2026) is a tabular foundation model: it classifies and regresses on tabular data **without any hyperparameter tuning**, via in-context learning. This MCP server makes it usable from natural language in any MCP-compatible assistant or agent.
 
@@ -74,7 +74,7 @@ Requires Python ≥ 3.10. With [uv](https://docs.astral.sh/uv/): nothing to inst
 
 With a local server, `load_data` accepts file paths — no pasting needed, and no data ever leaves your machine.
 
-### Option B — Deploy your own private server (free, for claude.ai / ChatGPT)
+### Option B — Deploy your own private server (free)
 
 **Who this is for:** when you use the public URL above, your CSV data is processed on a
 server operated by this project. That's fine for demos and non-sensitive data — but if
@@ -109,12 +109,15 @@ Deploying your own free endpoint on HuggingFace Spaces:
 Then connect:
 
 - **claude.ai** — Settings → Connectors → *Add custom connector* → paste the URL.
-- **ChatGPT** — enable Developer Mode (Settings, paid plans) → Apps & Connectors → add the URL.
+- Any other MCP-compatible client that accepts a Streamable HTTP URL.
 
-> **ChatGPT + file uploads:** ChatGPT often can't hand chat-uploaded files to connectors
-> (it only shows the model a preview). Workaround: open the server's homepage
-> (`https://YOUR-SPACE.hf.space/`), upload your CSV there, and paste the returned
-> dataset id into the chat. Claude reads chat uploads directly — no workaround needed.
+> **Large files:** instead of uploading a big CSV into the chat, open the server's
+> homepage (`https://YOUR-SPACE.hf.space/`), upload it there, and paste the returned
+> dataset id into the chat — the data then never has to pass through the model.
+
+> **Why not ChatGPT?** ChatGPT's custom-connector support currently can't reliably pass
+> uploaded files (or sometimes even tool calls) to MCP servers, so we don't document it.
+> The server is standard MCP — if ChatGPT's support matures, it will just work.
 
 > Free Spaces sleep after inactivity — the first request after idle takes a minute or two while the Space wakes. Everything after that is fast.
 

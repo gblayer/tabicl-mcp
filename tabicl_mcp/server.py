@@ -6,7 +6,7 @@ load data (paste / URL / file), evaluate, predict, explain, and generate a
 shareable HTML report.
 
 Transports: stdio (Claude Desktop, Cursor, VS Code) and Streamable HTTP
-(claude.ai, ChatGPT — one URL, e.g. hosted on a free HuggingFace Space).
+(claude.ai and other MCP clients — one URL, e.g. hosted on a free HuggingFace Space).
 """
 
 from __future__ import annotations
@@ -361,15 +361,14 @@ _UPLOAD_PAGE = """<!doctype html>
 <div class="box">
   <b>Connect your assistant</b>
   <p>MCP endpoint: <code>{base}/mcp</code><br>
-  claude.ai: Settings → Connectors → Add custom connector.<br>
-  ChatGPT: Developer Mode → Apps &amp; Connectors.
+  claude.ai: Settings → Connectors → Add custom connector.
   <a href="https://github.com/gblayer/tabicl-mcp">Full instructions</a>.</p>
 </div>
 
 <div class="box">
   <b>Upload a CSV for your chat session</b>
-  <p>Chat apps often can't hand uploaded files to connectors. Upload here instead,
-  then paste the dataset id into your chat (valid ~4 hours).</p>
+  <p>For large files: upload here instead of into the chat, then paste the dataset id
+  into your conversation (valid ~4 hours) — the data never passes through the model.</p>
   <form method="post" action="/upload" enctype="multipart/form-data">
     <input type="file" name="file" accept=".csv,text/csv" required>
     <button type="submit">Upload</button>
@@ -450,7 +449,7 @@ def serve_stdio() -> None:
 
 
 def serve_http() -> None:
-    """Remote server (Streamable HTTP) for claude.ai, ChatGPT, HF Spaces."""
+    """Remote server (Streamable HTTP) for claude.ai / MCP clients, HF Spaces."""
     global _TRANSPORT
     _TRANSPORT = "http"
     _cleanup_reports()
