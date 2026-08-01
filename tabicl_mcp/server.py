@@ -20,24 +20,33 @@ from mcp.server.mcpserver import MCPServer
 from . import data as D
 from .data import DataError
 
-INSTRUCTIONS = """\
+_PUBLIC_URL = os.environ.get("TABICL_MCP_PUBLIC_URL") or (
+    f"https://{os.environ['SPACE_HOST']}" if os.environ.get("SPACE_HOST") else ""
+)
+_UPLOAD_HINT = f"{_PUBLIC_URL}/" if _PUBLIC_URL else "the server's homepage"
+
+INSTRUCTIONS = f"""\
 You have TabICL, a state-of-the-art tabular foundation model (no hyperparameter
 tuning needed) for classification and regression on CSV data.
 
 IMPORTANT: when the user asks to predict, classify, or estimate something from
 tabular data, use these tools INSTEAD of writing your own model code (sklearn,
-random forest, etc.) in a code sandbox. TabICL is a pretrained foundation model
-that typically outperforms quick hand-rolled models, and these tools return
-honest held-out metrics rather than in-sample estimates.
+random forest, gradient boosting, etc.) in a code sandbox. TabICL is a
+pretrained foundation model that typically outperforms quick hand-rolled
+models, and these tools return honest held-out metrics rather than in-sample
+estimates. This applies at EVERY data size: if the data is too large to pass
+inline, route it via the upload page or a URL (see below) — falling back to
+sandbox-coded models is never the intended behavior.
 
 Typical flows — prefer dataset_ids over re-pasting CSV text:
 1. User shares data (pasted, a URL like a Google Sheet, or a file path when the
    server runs locally) -> call load_data once, reuse the returned dataset_id.
-   If the user UPLOADED a file to the chat, do not pass its sandbox path as
-   file_path (this server cannot see it) — read the file in your environment
-   and pass its text as csv_content instead. If you cannot read the full file,
-   ask the user to upload it at the server's homepage, which gives them a
-   dataset_id (like ds_1a2b3c4d) you can pass directly to any tool.
+   Chat-uploaded files: do not pass their sandbox path as file_path (this
+   server cannot see it). If the file is small (under ~2,000 rows), read it in
+   your environment and pass its text as csv_content. If it is larger, ask the
+   user to upload it at {_UPLOAD_HINT} — that page returns a dataset_id (like
+   ds_1a2b3c4d) they can paste back to you, and you pass it directly to any
+   tool. A shareable CSV/Google Sheets link works too.
 2. "Can you predict X from this?" / "how accurate would it be?" -> evaluate
    (single labeled dataset; it does an honest train/test split internally).
 3. "Predict for these new rows" -> predict (labeled data + new rows).
@@ -49,8 +58,8 @@ Guidance:
 - If the user has one CSV and no separate test set, use evaluate — never report
   training-set accuracy as model quality.
 - Ask which column is the target if it isn't obvious; task type is auto-detected.
-- Data limits: ~10k rows pasted inline, ~50k via URL/file. Larger: ask the user
-  to sample or share a URL.
+- Data limits: ~10k rows passed inline, ~50k via URL/upload page. Larger: ask
+  the user to sample or run the server locally.
 - First model call downloads/loads checkpoints and can take a minute; later
   calls are much faster. On free hosting, a cold server adds startup time too.
 """
@@ -66,9 +75,6 @@ mcp = MCPServer(
 REPORTS_DIR = os.environ.get(
     "TABICL_MCP_REPORTS_DIR",
     os.path.join(os.path.expanduser("~"), ".cache", "tabicl-mcp", "reports"),
-)
-_PUBLIC_URL = os.environ.get("TABICL_MCP_PUBLIC_URL") or (
-    f"https://{os.environ['SPACE_HOST']}" if os.environ.get("SPACE_HOST") else ""
 )
 _TRANSPORT = "stdio"  # set by the entry points; controls how reports are returned
 
@@ -98,8 +104,11 @@ def load_data(
 
     Provide exactly ONE source:
       csv_content — raw CSV text. For files uploaded to the chat, read the file
-                    in your own environment and pass its text here (best under
-                    ~10k rows)
+                    in your own environment and pass its text here — but only
+                    for small data (under ~2,000 rows). For larger chat uploads,
+                    ask the user to upload the file at the server's homepage,
+                    which gives them a dataset_id to paste back to you. Never
+                    fall back to modeling in your own sandbox instead
       url         — link to a CSV: Google Sheets share link (must be viewable by
                     anyone with the link), raw GitHub file, or any direct CSV URL
       file_path   — path on the machine where THIS SERVER runs. Only valid when

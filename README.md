@@ -36,18 +36,20 @@ There are three ways to get a CSV to the server. Pick by file size:
 Hard server limits: 10,000 rows for data passed through the chat, 50,000 rows / 50 MB
 via link or homepage upload. TabICL works best with 2–100 feature columns.
 
-**Homepage upload** (for bigger files): open your server's homepage —
-[gblayer-tabicl-mcp.hf.space](https://gblayer-tabicl-mcp.hf.space/) for the public
-server — choose your CSV, click Upload, and copy the dataset id it returns (looks like
-`ds_1a2b3c4d`). Then just mention it in the chat: *"Analyze my dataset ds_1a2b3c4d —
-predict churn."* The id is valid for ~4 hours and the data stays in the server's memory
-only.
+**Homepage upload, explained:** the homepage
+([gblayer-tabicl-mcp.hf.space](https://gblayer-tabicl-mcp.hf.space/) for the public
+server) is a plain web page with a file picker. Upload a CSV there → the server parses
+it, holds it in memory for ~4 hours, and shows you an id like `ds_1a2b3c4d`. In any
+Claude chat you then say *"analyze my dataset ds_1a2b3c4d — predict churn"* — Claude
+passes the id to the tools, and since the data is already sitting on the server,
+nothing heavy ever moves through the model. It's the same trick that makes dataset ids
+efficient between tool calls, just with a browser doing the initial delivery.
 
-**Google Sheets:** in your sheet, click **Share → General access → "Anyone with the
-link" (Viewer)**, copy the link, and paste it into the chat: *"Load this sheet and
-predict revenue: https://docs.google.com/spreadsheets/d/…"*. The server converts the
-share link to a CSV export automatically. (Only do this for sheets that aren't
-confidential — link-sharing makes them readable by anyone who has the URL.)
+**Google Sheets, explained:** no setup or integration needed — the server understands
+Google Sheets share links. In your sheet, click **Share → General access → "Anyone with
+the link" (Viewer)** and copy the link. Paste that link into the chat together with your
+question, and the server converts it to a CSV export automatically. Only do this for
+sheets that aren't confidential — "anyone with the link" means exactly that.
 
 ## Try it in 60 seconds
 
