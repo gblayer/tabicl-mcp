@@ -17,11 +17,15 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
+import os
+
 # Inline CSV rides through the LLM context, so it is the tightest budget.
-MAX_INLINE_ROWS = 10_000
-# URL / file ingestion bypasses the context, so the cap is the model's comfort zone.
-MAX_FETCH_BYTES = 50 * 1024 * 1024
-MAX_ROWS = 50_000
+MAX_INLINE_ROWS = int(os.environ.get("TABICL_MCP_MAX_INLINE_ROWS", 10_000))
+# URL / file ingestion bypasses the context; defaults sized for free-CPU hosting.
+# Local users with real hardware can raise these (TabICL handles ~500k rows
+# with offloading, but compute grows fast).
+MAX_FETCH_BYTES = int(os.environ.get("TABICL_MCP_MAX_MB", 50)) * 1024 * 1024
+MAX_ROWS = int(os.environ.get("TABICL_MCP_MAX_ROWS", 50_000))
 
 CACHE_TTL_SECONDS = 4 * 60 * 60
 CACHE_MAX_ENTRIES = 32

@@ -31,9 +31,9 @@ There are three ways to get a CSV to the server. Pick by file size:
 |---|---|
 | Up to ~2,000 rows (≈1 MB) | **Upload the file straight into the chat** and ask your question — simplest, works out of the box |
 | ~2,000–50,000 rows | **Homepage upload** or a **Google Sheets link** (see below) — the data goes directly to the server instead of through the AI model, which is faster and cheaper |
-| More than 50,000 rows / 50 MB | Sample it down first, or [run the server locally](#option-a--local-free-private-fastest) where there's no transfer at all |
+| More than 50,000 rows / 50 MB | **Sample it down** — ask your assistant *"randomly sample 20,000 rows from this file and give me a smaller CSV"*, then share that (beyond a few tens of thousands of rows, extra data barely improves accuracy but slows everything down). Power users: [run the server locally](#option-a--local-free-private-fastest) instead — files load straight from your disk, and you can raise the caps with `TABICL_MCP_MAX_ROWS` / `TABICL_MCP_MAX_MB` env vars if your hardware can take it |
 
-Hard server limits: 10,000 rows for data passed through the chat, 50,000 rows / 50 MB
+Default server limits: 10,000 rows for data passed through the chat, 50,000 rows / 50 MB
 via link or homepage upload. TabICL works best with 2–100 feature columns.
 
 **Homepage upload, explained:** the homepage
