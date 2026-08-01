@@ -23,7 +23,31 @@ Claude: [load_data]  → 2,340 rows, 12 columns, target "churned" looks binary
 | `create_report` | Self-contained HTML report: metric cards in plain language, confusion matrix, feature importance chart, distributions. Served as a link (remote) or file (local) |
 | `export_predictions` | Page through large prediction results as CSV |
 
-**Data limits:** ~10k rows pasted inline, ~50k via URL or file. TabICLv2 handles 2–100 features natively.
+## Sharing your data: size guide
+
+There are three ways to get a CSV to the server. Pick by file size:
+
+| Your data | Best way to share it |
+|---|---|
+| Up to ~2,000 rows (≈1 MB) | **Upload the file straight into the chat** and ask your question — simplest, works out of the box |
+| ~2,000–50,000 rows | **Homepage upload** or a **Google Sheets link** (see below) — the data goes directly to the server instead of through the AI model, which is faster and cheaper |
+| More than 50,000 rows / 50 MB | Sample it down first, or [run the server locally](#option-a--local-free-private-fastest) where there's no transfer at all |
+
+Hard server limits: 10,000 rows for data passed through the chat, 50,000 rows / 50 MB
+via link or homepage upload. TabICL works best with 2–100 feature columns.
+
+**Homepage upload** (for bigger files): open your server's homepage —
+[gblayer-tabicl-mcp.hf.space](https://gblayer-tabicl-mcp.hf.space/) for the public
+server — choose your CSV, click Upload, and copy the dataset id it returns (looks like
+`ds_1a2b3c4d`). Then just mention it in the chat: *"Analyze my dataset ds_1a2b3c4d —
+predict churn."* The id is valid for ~4 hours and the data stays in the server's memory
+only.
+
+**Google Sheets:** in your sheet, click **Share → General access → "Anyone with the
+link" (Viewer)**, copy the link, and paste it into the chat: *"Load this sheet and
+predict revenue: https://docs.google.com/spreadsheets/d/…"*. The server converts the
+share link to a CSV export automatically. (Only do this for sheets that aren't
+confidential — link-sharing makes them readable by anyone who has the URL.)
 
 ## Try it in 60 seconds
 
